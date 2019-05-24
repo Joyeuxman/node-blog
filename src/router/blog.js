@@ -7,6 +7,14 @@ const {
 } = require('../controller/blog');
 const { SuccessModel, ErrorModel } = require('../model/resModel');
 
+// 统一的登录验证函数
+const loginCheck = req => {
+  const { username } = req.session;
+  if (!username) {
+    return Promise.resolve(new ErrorModel('尚未登录'));
+  }
+};
+
 const handleBlogRouter = (req, res) => {
   const { method, path } = req;
   const { id } = req.query;
@@ -19,6 +27,12 @@ const handleBlogRouter = (req, res) => {
     // const data = getList(author, keyword);
     // return new SuccessModel(data);
 
+    const loginCheckResult = loginCheck(req);
+    if (loginCheckResult) {
+      // 未登录
+      return loginCheck;
+    }
+
     const result = getList(author, keyword);
     return result.then(data => {
       return new SuccessModel(data);
@@ -27,6 +41,12 @@ const handleBlogRouter = (req, res) => {
 
   // 获取博客详情
   if (method === 'GET' && path === '/api/blog/detail') {
+    const loginCheckResult = loginCheck(req);
+    if (loginCheckResult) {
+      // 未登录
+      return loginCheck;
+    }
+
     const { id = '' } = req.query;
 
     // const data = getDetail(id);
@@ -40,10 +60,16 @@ const handleBlogRouter = (req, res) => {
 
   // 新建一篇博客
   if (method === 'POST' && path === '/api/blog/new') {
+    const loginCheckResult = loginCheck(req);
+    if (loginCheckResult) {
+      // 未登录
+      return loginCheck;
+    }
+    
     // const data = newBlog(req.body);
     // return new SuccessModel(data);
 
-    req.body.author = 'ligh'; // 假数据，待开发登录时再改成真实数据
+    req.body.author = req.session.username;
     const result = newBlog(req.body);
     return result.then(data => {
       return new SuccessModel(data);
@@ -52,6 +78,12 @@ const handleBlogRouter = (req, res) => {
 
   // 更新一篇博客
   if (method === 'POST' && path === '/api/blog/update') {
+    const loginCheckResult = loginCheck(req);
+    if (loginCheckResult) {
+      // 未登录
+      return loginCheck;
+    }
+
     const result = updateBlog(id, req.body);
     return result.then(data => {
       if (data) {
@@ -64,7 +96,13 @@ const handleBlogRouter = (req, res) => {
 
   // 删除一篇博客
   if (method === 'POST' && path === '/api/blog/del') {
-    const author = 'ligh'; // 假数据，待开发登录时再改成真实数据
+    const loginCheckResult = loginCheck(req);
+    if (loginCheckResult) {
+      // 未登录
+      return loginCheck;
+    }
+
+    const author = req.session.username;
     // 只有作者自己才能删除自己的博客
     const result = delBlog(id, author);
     return result.then(data => {
