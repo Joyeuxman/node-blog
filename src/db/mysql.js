@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const { MYSQL_CONF } = require('../conf/db');
 
+
 // 创建连接对象
 const con = mysql.createConnection(MYSQL_CONF);
 

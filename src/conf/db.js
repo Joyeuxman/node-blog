@@ -1,4 +1,4 @@
-const env = process.env.NODE_ENV; // 环境参数
+const env = process.env.NODE_ENV || 'dev'; // 环境参数
 
 // 配置
 let MYSQL_CONF;

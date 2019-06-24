@@ -21,16 +21,18 @@ const handleBlogRouter = (req, res) => {
 
   // 获取博客列表
   if (method === 'GET' && path === '/api/blog/list') {
-    const author = req.query.author || '';
+    let author = req.query.author || '';
     const keyword = req.query.keyword || '';
 
-    // const data = getList(author, keyword);
-    // return new SuccessModel(data);
-
-    const loginCheckResult = loginCheck(req);
-    if (loginCheckResult) {
-      // 未登录
-      return loginCheck;
+    if (req.query.isadmin) {
+      // 管理员界面
+      const loginCheckResult = loginCheck(req);
+      if (loginCheckResult) {
+        // 未登录
+        return loginCheckResult;
+      }
+      // 强制查询自己的博客
+      author = req.session.username;
     }
 
     const result = getList(author, keyword);
@@ -44,14 +46,10 @@ const handleBlogRouter = (req, res) => {
     const loginCheckResult = loginCheck(req);
     if (loginCheckResult) {
       // 未登录
-      return loginCheck;
+      return loginCheckResult;
     }
 
     const { id = '' } = req.query;
-
-    // const data = getDetail(id);
-    // return new SuccessModel(data);
-
     const result = getDetail(id);
     return result.then(data => {
       return new SuccessModel(data);
@@ -63,11 +61,8 @@ const handleBlogRouter = (req, res) => {
     const loginCheckResult = loginCheck(req);
     if (loginCheckResult) {
       // 未登录
-      return loginCheck;
+      return loginCheckResult;
     }
-    
-    // const data = newBlog(req.body);
-    // return new SuccessModel(data);
 
     req.body.author = req.session.username;
     const result = newBlog(req.body);
@@ -81,7 +76,7 @@ const handleBlogRouter = (req, res) => {
     const loginCheckResult = loginCheck(req);
     if (loginCheckResult) {
       // 未登录
-      return loginCheck;
+      return loginCheckResult;
     }
 
     const result = updateBlog(id, req.body);
@@ -99,7 +94,7 @@ const handleBlogRouter = (req, res) => {
     const loginCheckResult = loginCheck(req);
     if (loginCheckResult) {
       // 未登录
-      return loginCheck;
+      return loginCheckResult;
     }
 
     const author = req.session.username;

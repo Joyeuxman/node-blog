@@ -9,7 +9,7 @@ const { getCookieExpires } = require('./src/utils/index');
 
 // 用于处理 post data
 const getPostData = req => {
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise(resolve => {
     if (req.method !== 'POST') {
       return resolve({});
     }
@@ -32,11 +32,11 @@ const getPostData = req => {
 };
 
 const serverHandle = (req, res) => {
-  const url = req.url;
-  req.path = url.split('?')[0];
-
   // 设置返回数据格式为json格式
   res.setHeader('content-type', 'application/json');
+
+  const url = req.url;
+  req.path = url.split('?')[0];
 
   // 解析query
   req.query = querystring.parse(url.split('?')[1]);
@@ -109,6 +109,7 @@ const serverHandle = (req, res) => {
             // nodejs修改cookie;
             // path = /,表示所有的路由都会生效
             // httpOnly 表示cookie只允许后端修改,不能通过前端JS修改
+            // expires  表示cookie的过期时间
             res.setHeader(
               'Set-Cookie',
               `userId=${userId};path=/;httpOnly;expires=${getCookieExpires()}`
