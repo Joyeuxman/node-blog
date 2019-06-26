@@ -1,4 +1,5 @@
 const { exec } = require('../db/mysql');
+const xss = require('xss');
 
 const getList = (author, keyword) => {
   // where 1=1 妙用 保证了sql语句的正确性(无论author/keyword是否存在)
@@ -26,8 +27,10 @@ const getDetail = id => {
 const newBlog = (blogData = {}) => {
   // blogData 是一个博客对象，包含title content author 属性
 
-  const { title, content, author } = blogData;
+  let { title, content, author } = blogData;
+  title = xss(title);
   const createtime = Date.now();
+  console.log('预防XSS,title===',title);
   const sql = `
   insert into blogs (title,content,author,createtime)
   values ('${title}','${content}','${author}',${createtime})
