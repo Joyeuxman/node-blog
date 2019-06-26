@@ -100,7 +100,7 @@ const serverHandle = (req, res) => {
       console.log('req.session===', req.session);
 
       // 处理 post data
-      getPostData(req);
+      return getPostData(req);
     })
     .then(postData => {
       req.body = postData;

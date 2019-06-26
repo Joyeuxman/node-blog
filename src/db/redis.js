@@ -37,6 +37,7 @@ function set(key, val) {
   if (typeof val === 'object') {
     val = JSON.stringify(val);
   }
+  // 存储值成功将之后使用redis.print打印 Reply: OK 表示存储成功 
   redisClient.set(key, val, redis.print);
 }
 
