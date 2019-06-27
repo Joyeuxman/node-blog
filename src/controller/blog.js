@@ -28,6 +28,7 @@ const newBlog = (blogData = {}) => {
   // blogData 是一个博客对象，包含title content author 属性
 
   let { title, content, author } = blogData;
+  // 使用xss包来避免XSS攻击
   title = xss(title);
   const createtime = Date.now();
   console.log('预防XSS,title===',title);
