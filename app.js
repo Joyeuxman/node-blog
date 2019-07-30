@@ -8,7 +8,7 @@ const { getCookieExpires } = require('./src/utils/index');
 // // 存储 session（通过js变量）
 // const SESSION_DATA = {};
 
-// 用于处理 post data
+// 处理 post data
 const getPostData = req => {
   const promise = new Promise(resolve => {
     if (req.method !== 'POST') {
@@ -60,7 +60,7 @@ const serverHandle = (req, res) => {
   });
   console.log('req.cookie===', req.cookie);
 
-  // // 解析session
+  // // 解析session（使用本地JS变量）
   // let needSetCookie = false;
   // let userId = req.cookie.userId;
   // if (userId) {

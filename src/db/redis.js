@@ -32,7 +32,7 @@ function get(key) {
   return promise;
 }
 
-// redis 设置值（同步过程）???
+// redis 设置值
 function set(key, val) {
   if (typeof val === 'object') {
     val = JSON.stringify(val);
